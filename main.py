@@ -6,6 +6,7 @@ EPISODES = 100000
 EPSILON = 0.1
 GAMMA = 0.9
 LEARNING_RATE = 0.1
+GAMMA = 0.9
 
 def argmax(l):
     """ Return the index of the maximum element of a list
@@ -28,7 +29,7 @@ def main():
         # Loop over time-steps
         while not terminate:
             # Compute what the greedy action for the current state is
-            a = 0
+            a = argmax(qtable[state])
 
             # Sometimes, the agent takes a random action, to explore the environment
             if random.random() < EPSILON:
@@ -38,7 +39,7 @@ def main():
             next_state, r, terminate = env.step(a)
 
             # Update the Q-Table
-            qtable[state][a] = 0.0
+            qtable[state][a] = qtable[state][a] + LEARNING_RATE * (r + (GAMMA * max(qtable[next_state])) - qtable[state][a])
 
             # Update statistics
             cumulative_reward += r
